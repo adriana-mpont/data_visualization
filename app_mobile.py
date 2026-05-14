@@ -147,7 +147,7 @@ if st.button("Generate PDF Report", use_container_width=True, type="primary"):
                     name=name.strip(),
                     title=discovery_title.strip(),
                     desc=notes.strip(),
-                    report_date=date,
+                    report_date=report_date,
                     latitude=lat,
                     longitude=lon,
                     photo_bytes=photo.getvalue(),
