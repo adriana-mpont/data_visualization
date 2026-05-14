@@ -23,8 +23,8 @@ st.caption("Document and report a discovery in a structured and professional way
 #User Inputs
 st.markdown('<div class="section-header">1 · Researcher Information</div>', unsafe_allow_html=True)
 
-researcher_name = st.text_input("Researcher name *", placeholder="e.g. Dr. Jane Smith")
-discovery_title = st.text_input("Title of discovery *", placeholder="e.g. Rare orchid specimen found")
+researcher_name = st.text_input("Researcher name *")
+discovery_title = st.text_input("Title of discovery *")
 description     = st.text_area("Description / Observations *",
                                placeholder="Describe your finding in detail…",
                                height=120)
