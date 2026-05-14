@@ -30,21 +30,26 @@ obs_date = st.date_input("Date of observation", value=date.today())
 # GPS location
 st.subheader("Location")
 location_data = gps_location_button(buttonText="Get my location")
+
 lat, lon = None, None
- 
+
 if location_data is not None:
-    st.write("Your location data:")
-    st.json(location_data)
- 
-    if location_data.get('latitude') is not None and location_data.get('longitude') is not None:
-        lat = location_data['latitude']
-        lon = location_data['longitude']
-        map_data = pd.DataFrame({'lat': [lat], 'lon': [lon]})
-        st.subheader("Your location on the map")
-        st.map(map_data)
-else:
-    st.info("Press 'Get my location' to see your location on the map.")
- 
+    lat = location_data.get('latitude')
+    lon = location_data.get('longitude')
+    if lat and lon:
+        st.success(f"📍 GPS captured: {lat:.5f}, {lon:.5f}")
+
+if lat is None or lon is None:
+    st.info("GPS not available. Enter coordinates manually:")
+    col1, col2 = st.columns(2)
+    with col1:
+        lat = st.number_input("Latitude", value=41.3851, format="%.5f")
+    with col2:
+        lon = st.number_input("Longitude", value=2.1734, format="%.5f")
+
+if lat and lon:
+    map_data = pd.DataFrame({'lat': [lat], 'lon': [lon]})
+    st.map(map_data)
 #Visual Evidence 
 st.subheader("Visual evidence")
 
@@ -116,7 +121,7 @@ def build_pdf(name, title, desc, obs_date, latitude, longitude, photo_bytes):
     buffer.seek(0)
     return buffer.read()
 
-if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+if st.button("Generate PDF Report", use_container_width=True, type="primary"):
     errors = []
     if not name.strip():
         errors.append("Researcher name is required.")
@@ -131,7 +136,7 @@ if st.button("📄 Generate PDF Report", use_container_width=True, type="primary
  
     if errors:
         for err in errors:
-            st.error(f"⚠️ {err}")
+            st.error(f"{err}")
     else:
         with st.spinner("Building your field report…"):
             try:
@@ -144,9 +149,9 @@ if st.button("📄 Generate PDF Report", use_container_width=True, type="primary
                     longitude=lon,
                     photo_bytes=photo.getvalue(),
                 )
-                st.success("✅ Report generated successfully!")
+                st.success(" Report generated successfully!")
                 st.download_button(
-                    label="⬇️ Download Field Report PDF",
+                    label="Download Field Report PDF",
                     data=pdf_bytes,
                     file_name=f"field_report_{obs_date.strftime('%Y%m%d')}.pdf",
                     mime="application/pdf",
