@@ -25,7 +25,10 @@ name = st.text_input("What is your name?")
 age = st.slider("How old are you?", 0, 100, 25)
 discovery_title = st.text_input("Title of discovery: ")
 notes = st.text_input("Ass any notes or description: ")
-obs_date = st.date_input("Date of observation", value=date.today())
+report_date = st.date_input("Date of observation", value=date.today())
+if isinstance(report_date, str):
+    from datetime import date as dt
+    report_date = dt.fromisoformat(report_date)
 
 # GPS location
 st.subheader("Location")
@@ -144,7 +147,7 @@ if st.button("Generate PDF Report", use_container_width=True, type="primary"):
                     name=name.strip(),
                     title=discovery_title.strip(),
                     desc=notes.strip(),
-                    obs_date=date,
+                    report_date=date,
                     latitude=lat,
                     longitude=lon,
                     photo_bytes=photo.getvalue(),
@@ -153,7 +156,7 @@ if st.button("Generate PDF Report", use_container_width=True, type="primary"):
                 st.download_button(
                     label="Download Field Report PDF",
                     data=pdf_bytes,
-                    file_name=f"field_report_{obs_date.strftime('%Y%m%d')}.pdf",
+                    file_name=f"field_report_{report_date.strftime('%Y%m%d')}.pdf",
                     mime="application/pdf",
                 )
             except Exception as e:
