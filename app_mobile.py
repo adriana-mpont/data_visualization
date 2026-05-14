@@ -39,18 +39,22 @@ location_data = gps_location_button(buttonText="Get my location")
 lat, lon = None, None
 
 if location_data is not None:
-    st.write("Your location data:")
-    st.json(location_data)
+    lat = location_data.get('latitude')
+    lon = location_data.get('longitude')
+    if lat and lon:
+        st.success(f"📍 GPS captured: {lat:.5f}, {lon:.5f}")
 
-    if location_data.get('latitude') is not None and location_data.get('longitude') is not None:
-        lat = location_data['latitude']
-        lon = location_data['longitude']
-        map_data = pd.DataFrame({'lat': [lat], 'lon': [lon]})
-        st.subheader("Your location on the map")
-        st.map(map_data)
-else:
-    st.info("Press 'Get my location' to see your location on the map.")
+if lat is None or lon is None:
+    st.info("GPS not available. Enter coordinates manually:")
+    col1, col2 = st.columns(2)
+    with col1:
+        lat = st.number_input("Latitude", value=41.3851, format="%.5f")
+    with col2:
+        lon = st.number_input("Longitude", value=2.1734, format="%.5f")
 
+if lat and lon:
+    map_data = pd.DataFrame({'lat': [lat], 'lon': [lon]})
+    st.map(map_data)
 #Visual Evidence
 st.markdown('<div class="section-header">3 · Visual Evidence</div>', unsafe_allow_html=True)
 
