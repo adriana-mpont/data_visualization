@@ -1,0 +1,6 @@
+
+streamlit
+streamlit_gps_location
+pandas
+reportlab
+Pillow
